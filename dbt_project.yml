@@ -41,5 +41,11 @@ models:
     src:
       +database: prep
       +materialized: table
+      +schema: raw_data_sources
+
+      honeybook:
+        +schema: raw_data_sources
+
+
 
 
