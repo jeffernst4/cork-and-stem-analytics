@@ -23,8 +23,8 @@ WITH
     honeybook_transactions AS (
         SELECT
             'Honeybook' AS type,
-            charge_date AS date,
-            net_amount AS sales
+            project_date AS date,
+            net_amount AS sales, *
         FROM {{ ref('src_honeybook_transactions') }}
     ),
     combined_sales AS (
