@@ -48,6 +48,8 @@ WITH
         SELECT
             CASE
                 WHEN type IN ('Square - Onsite Event', 'Honeybook') THEN 'Event'
+                WHEN type = 'Square - Membership' THEN 'Membership'
+                WHEN type = 'Square - General' THEN  'In-Store'
                 ELSE type
             END AS transaction_category,
             type AS transaction_type,
