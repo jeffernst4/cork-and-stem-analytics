@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: doordash
+    database: cork-and-stem-analytics
+    schema: raw_data_sources
+    tables:
+      - name: doordash_transactions
+        description: Sales transaction data from doordash

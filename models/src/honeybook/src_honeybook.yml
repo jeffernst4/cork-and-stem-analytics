@@ -5,5 +5,5 @@ sources:
     database: cork-and-stem-analytics
     schema: raw_data_sources
     tables:
-      - name: honeybook_events
-        description: Events data from honeybook
+      - name: honeybook_transactions
+        description: Transactions data from honeybook
