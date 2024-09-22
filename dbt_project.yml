@@ -40,11 +40,8 @@ models:
     # Applies to all files under models/example/
     src:
       +database: cork-and-stem-analytics
-      +schema: prep
+      +schema: src
       +materialized: table
-
-      honeybook:
-        +schema: prep
 
 
 
