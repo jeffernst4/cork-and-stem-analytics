@@ -19,12 +19,34 @@ WITH
             total_sales AS sales
         FROM {{ ref('src_shopify_transactions') }}
     ),
+    doordash_transactions AS (
+        SELECT
+            'DoorDash' AS type,
+            DATE(order_placed_timestamp) AS date,
+            DATE_TRUNC(DATE(order_placed_timestamp), WEEK) AS week,
+            subtotal AS sales
+        FROM {{ ref('src_doordash_transactions') }}
+    ),
+    honeybook_transactions AS (
+        SELECT
+            'Honeybook' AS type,
+            charge_date AS date,
+            DATE_TRUNC(charge_date, WEEK) AS week,
+            net_amount AS sales
+        FROM {{ ref('src_honeybook_transactions') }}
+    ),
     combined_sales AS (
         SELECT *
         FROM square_transactions
         UNION ALL
         SELECT *
         FROM shopify_transactions
+        UNION ALL
+        SELECT *
+        FROM doordash_transactions
+        UNION ALL
+        SELECT *
+        FROM honeybook_transactions
     ),
     final AS (
         SELECT
@@ -36,6 +58,5 @@ WITH
         GROUP BY 1, 2, 3
     )
     
-
 SELECT *
 FROM final
