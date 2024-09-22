@@ -7,7 +7,6 @@ WITH
                 ELSE 'Square - General'
                 END AS type,
             DATE(transaction_timestamp) AS date,
-            DATE_TRUNC(DATE(transaction_timestamp), WEEK) AS week,
             net_sales AS sales
         FROM {{ ref('stg_square_transactions') }}
     ),
@@ -15,7 +14,6 @@ WITH
         SELECT
             'Shopify' AS type,
             DATE(order_timestamp) AS date,
-            DATE_TRUNC(DATE(order_timestamp), WEEK) AS week,
             total_sales AS sales
         FROM {{ ref('src_shopify_transactions') }}
     ),
@@ -23,7 +21,6 @@ WITH
         SELECT
             'DoorDash' AS type,
             DATE(order_placed_timestamp) AS date,
-            DATE_TRUNC(DATE(order_placed_timestamp), WEEK) AS week,
             subtotal AS sales
         FROM {{ ref('src_doordash_transactions') }}
     ),
@@ -31,7 +28,6 @@ WITH
         SELECT
             'Honeybook' AS type,
             charge_date AS date,
-            DATE_TRUNC(charge_date, WEEK) AS week,
             net_amount AS sales
         FROM {{ ref('src_honeybook_transactions') }}
     ),
@@ -50,12 +46,17 @@ WITH
     ),
     final AS (
         SELECT
+            CASE
+                WHEN type IN ('Square - Onsite Event', 'Honeybook') THEN 'Event'
+                ELSE type
+            END AS transaction_category,
             type AS transaction_type,
             date AS transaction_date,
-            week AS transaction_week,
+            DATE_TRUNC(date, WEEK) AS transaction_week,
+            DATE_TRUNC(date, MONTH) AS transaction_month, 
             SUM(sales) AS total_sales
         FROM combined_sales
-        GROUP BY 1, 2, 3
+        GROUP BY type, date
     )
     
 SELECT *

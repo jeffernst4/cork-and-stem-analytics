@@ -4,9 +4,9 @@ WITH
             `Date` AS date,
             `Time` AS time,
             CASE 
-            WHEN `Time Zone` = 'Pacific Time (US & Canada)' THEN 'America/Los_Angeles'
-            -- Add other mappings as needed
-            ELSE 'America/Los_Angeles'
+                WHEN `Time Zone` = 'Pacific Time (US & Canada)' THEN 'America/Los_Angeles'
+                -- Add other mappings as needed
+                ELSE 'America/Los_Angeles'
             END AS timezone,
             `Category` AS item_category,
             `Item` AS item,
