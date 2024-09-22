@@ -2,7 +2,7 @@
 # Name your project! Project names should contain only lowercase characters
 # and underscores. A good package name should reflect your organization's
 # name or the intended use of these models
-name: 'my_new_project'
+name: 'cork_and_stem_data_model'
 version: '1.0.0'
 config-version: 2
 
@@ -36,15 +36,15 @@ clean-targets:         # directories to be removed by `dbt clean`
 # using the `{{ config(...) }}` macro.
 
 models:
-  cork_and_stem_project:
+  cork_and_stem_data_model:
     # Applies to all files under models/example/
     src:
-      +database: prep
+      +database: cork-and-stem-analytics
+      +schema: prep
       +materialized: table
-      +schema: raw_data_sources
 
       honeybook:
-        +schema: raw_data_sources
+        +schema: prep
 
 
 
