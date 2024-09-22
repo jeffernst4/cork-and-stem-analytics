@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: events
+    database: cork-and-stem-analytics
+    schema: raw_data_sources
+    tables:
+      - name: event_log
+        description: Manually inputted events data
