@@ -4,7 +4,7 @@ WITH
             DATE(transaction_timestamp) AS transaction_date,
             item,
             item_category,
-            net_sales, *
+            net_sales
         FROM {{ ref('stg_square_transactions') }}
         WHERE transaction_category = 'General'
     ),
