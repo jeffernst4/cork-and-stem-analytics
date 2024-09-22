@@ -1,7 +1,7 @@
 SELECT
     `Order ID` AS order_id,
     `Sale ID` AS sale_id,
-    FORMAT_DATETIME('%F %T', DATETIME(TIMESTAMP(`Date`), 'America/Los_Angeles')) AS order_timestamp,
+    {{ convert_to_pt('Date') }} AS order_timestamp,
     `Order` AS order_number,
     `Transaction type` AS transaction_type,
     `Sale type` AS sale_type,
@@ -25,4 +25,3 @@ SELECT
     `Taxes` AS taxes,
     `Total sales` AS total_sales
 FROM {{ source('shopify', 'shopify_transactions') }}
-order by date desc
