@@ -46,6 +46,10 @@ WITH
     ),
     final AS (
         SELECT
+            CASE
+                WHEN type IN ('Square - Onsite Event', 'Honeybook') THEN 'Event'
+                ELSE type
+            END AS transaction_category,
             type AS transaction_type,
             date AS transaction_date,
             DATE_TRUNC(date, WEEK) AS transaction_week,
