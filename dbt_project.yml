@@ -39,8 +39,6 @@ models:
   cork_and_stem_data_model:
     # Applies to all files under models/example/
     src:
-      +database: cork-and-stem-analytics
-      +schema: src
       +materialized: table
 
 
