@@ -38,9 +38,7 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   cork_and_stem_project:
     # Applies to all files under models/example/
-    example:
-      +materialized: table
-    prep:
+    src:
       +database: prep
       +materialized: table
 
