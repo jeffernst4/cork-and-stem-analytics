@@ -1,11 +1,7 @@
 WITH
     square_transactions AS (
         SELECT
-            CASE
-                WHEN is_membership THEN 'Square - Membership'
-                WHEN is_during_onsite_event THEN 'Square - Onsite Event'
-                ELSE 'Square - General'
-                END AS type,
+            CONCAT('Square - ', transaction_category) AS type,
             DATE(transaction_timestamp) AS date,
             net_sales AS sales
         FROM {{ ref('stg_square_transactions') }}

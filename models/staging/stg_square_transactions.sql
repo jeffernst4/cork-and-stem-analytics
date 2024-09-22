@@ -14,7 +14,7 @@ WITH
         FROM {{ ref('src_event_log') }}
         WHERE event_type = 'Onsite Event'
     ),
-    final AS (
+    square_transaction_details AS (
         SELECT
             square_transactions.*,
             item like '%Submatic%' AS is_membership,
@@ -25,6 +25,16 @@ WITH
         FROM square_transactions
         LEFT JOIN onsite_events
         ON square_transactions.transaction_timestamp BETWEEN onsite_events.event_start_timestamp AND onsite_events.event_end_timestamp
+    ),
+    final AS (
+        SELECT
+            *,
+            CASE
+                WHEN is_membership THEN 'Membership'
+                WHEN is_during_onsite_event THEN 'Onsite Event'
+                ELSE 'General'
+            END AS transaction_category
+        FROM square_transaction_details
     )
 
 SELECT *
