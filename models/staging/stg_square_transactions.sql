@@ -17,7 +17,7 @@ WITH
     square_transaction_details AS (
         SELECT
             square_transactions.*,
-            item like '%Submatic%' AS is_membership,
+            item like '%Submatic%' OR item_category = 'Membership' AS is_membership,
             onsite_events.event_id IS NOT NULL AS is_during_onsite_event,
             onsite_events.event_id,
             onsite_events.event_name,
