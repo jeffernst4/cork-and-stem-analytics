@@ -8,10 +8,10 @@ WITH
     ),
     shopify_transactions AS (
         SELECT
-            'Shopify' AS type,
+            CONCAT('Shopify - ', transaction_category) AS type,
             DATE(order_timestamp) AS date,
             total_sales AS sales
-        FROM {{ ref('src_shopify_transactions') }}
+        FROM {{ ref('stg_shopify_transactions') }}
     ),
     doordash_transactions AS (
         SELECT
@@ -23,9 +23,9 @@ WITH
     honeybook_transactions AS (
         SELECT
             'Honeybook' AS type,
-            charge_date AS date,
-            net_amount AS sales
-        FROM {{ ref('src_honeybook_transactions') }}
+            project_date AS date,
+            net_sales AS sales
+        FROM {{ ref('stg_honeybook_transactions') }}
     ),
     combined_sales AS (
         SELECT *
@@ -43,9 +43,10 @@ WITH
     final AS (
         SELECT
             CASE
-                WHEN type IN ('Square - Onsite Event', 'Honeybook') THEN 'Event'
+                WHEN type IN ('Square - Onsite Event', 'Shopify - Event', 'Honeybook') THEN 'Event'
                 WHEN type = 'Square - Membership' THEN 'Membership'
                 WHEN type = 'Square - General' THEN  'In-Store'
+                WHEN type LIKE 'Shopify%' THEN 'Online'
                 ELSE type
             END AS transaction_category,
             type AS transaction_type,
