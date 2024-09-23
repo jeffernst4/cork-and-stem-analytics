@@ -14,27 +14,20 @@ WITH
         FROM {{ ref('src_event_log') }}
         WHERE event_type = 'Onsite Event'
     ),
-    square_transaction_details AS (
+    final AS (
         SELECT
             square_transactions.*,
-            item like '%Submatic%' OR item_category = 'Membership' AS is_membership,
-            onsite_events.event_id IS NOT NULL AS is_during_onsite_event,
+            CASE
+                WHEN item like '%Submatic%' OR item_category = 'Membership' THEN 'Membership'
+                WHEN onsite_events.event_name IS NOT NULL THEN 'Onsite Event'
+                ELSE 'General'
+            END AS transaction_category,
             onsite_events.event_id,
             onsite_events.event_name,
             onsite_events.event_category
         FROM square_transactions
         LEFT JOIN onsite_events
         ON square_transactions.transaction_timestamp BETWEEN onsite_events.event_start_timestamp AND onsite_events.event_end_timestamp
-    ),
-    final AS (
-        SELECT
-            *,
-            CASE
-                WHEN is_membership THEN 'Membership'
-                WHEN is_during_onsite_event THEN 'Onsite Event'
-                ELSE 'General'
-            END AS transaction_category
-        FROM square_transaction_details
     )
 
 SELECT *
