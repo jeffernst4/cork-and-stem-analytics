@@ -26,8 +26,8 @@ WITH
             onsite_events.event_name,
             onsite_events.event_category
         FROM square_transactions
-        LEFT JOIN onsite_events
-        ON square_transactions.transaction_timestamp BETWEEN onsite_events.event_start_timestamp AND onsite_events.event_end_timestamp
+            LEFT JOIN onsite_events
+                ON square_transactions.transaction_timestamp BETWEEN onsite_events.event_start_timestamp AND onsite_events.event_end_timestamp
     )
 
 SELECT *

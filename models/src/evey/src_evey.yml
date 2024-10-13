@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: evey
+    database: cork-and-stem-analytics
+    schema: raw_data_sources
+    tables:
+      - name: evey_attendees
+        description: Attendee data from doordash
