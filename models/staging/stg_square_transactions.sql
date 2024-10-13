@@ -24,6 +24,8 @@ WITH
             END AS transaction_category,
             onsite_events.event_id,
             onsite_events.event_name,
+            onsite_events.event_date,
+            onsite_events.event_type,
             onsite_events.event_category
         FROM square_transactions
             LEFT JOIN onsite_events

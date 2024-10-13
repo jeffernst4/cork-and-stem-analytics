@@ -1,8 +1,8 @@
 WITH
     raw_data AS (
         SELECT
-            id,
-            event_number,
+            id AS attendee_id,
+            event_number AS event_id,
             event_title,
             order_id,
             order_name

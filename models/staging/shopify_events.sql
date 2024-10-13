@@ -11,8 +11,8 @@ WITH
     ),
     evey_attendees AS (
         SELECT
-            id,
-            event_number,
+            attendee_id,
+            event_id,
             order_id
         FROM {{ ref('src_evey_attendees') }}
     ),
@@ -38,7 +38,7 @@ WITH
     evey_orders AS (
         SELECT
             order_id,
-            event_number,
+            event_id,
             COUNT(*) AS attendee_count,
             SUM(COUNT(*)) OVER (PARTITION BY order_id) AS order_attendee_count,
             COUNT(*) / SUM(COUNT(*)) OVER (PARTITION BY order_id) AS attendee_order_proportion
@@ -49,11 +49,11 @@ WITH
         SELECT
             shopify_event_orders.order_id,
             shopify_event_orders.order_timestamp,
-            evey_orders.event_number,
+            evey_orders.event_id,
             event_log.event_name,
+            event_log.event_date,
             event_log.event_type,
             event_log.event_category,
-            event_log.event_date,
             evey_orders.attendee_count,
             evey_orders.order_attendee_count,
             shopify_event_orders.total_sales * COALESCE(evey_orders.attendee_order_proportion, 1) AS total_event_sales
@@ -61,7 +61,7 @@ WITH
             LEFT JOIN evey_orders
                 ON shopify_event_orders.order_id = evey_orders.order_id
             LEFT JOIN event_log
-                ON evey_orders.event_number = event_log.event_id
+                ON evey_orders.event_id = event_log.event_id
     )
 
 SELECT *
