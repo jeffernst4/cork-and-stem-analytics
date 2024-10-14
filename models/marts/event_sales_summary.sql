@@ -6,9 +6,8 @@ WITH
             project_date AS event_date,
             event_type,
             event_category,
-            SUM(net_sales) AS sales
+            net_sales AS sales
         FROM {{ ref('stg_honeybook_transactions') }}
-        GROUP BY 1, 2, 3, 4, 5
     ),
     shopify_eventS AS (
         SELECT
@@ -17,9 +16,8 @@ WITH
             COALESCE(event_date, SAFE_CAST(order_timestamp AS DATE)) AS event_date,
             event_type,
             event_category,
-            SUM(total_event_sales) AS sales
+            total_event_sales AS sales
         FROM {{ ref('shopify_events') }}
-        GROUP BY 1, 2, 3, 4, 5
     ),
     square_transactions AS (
         SELECT
@@ -28,12 +26,11 @@ WITH
             SAFE_CAST(transaction_timestamp AS DATE) AS event_date,
             event_type,
             event_category,
-            SUM(net_sales) AS sales
+            net_sales AS sales
         FROM {{ ref('stg_square_transactions') }}
         WHERE transaction_category = 'Onsite Event'
-        GROUP BY 1, 2, 3, 4, 5
     ),
-    final AS (
+    combined_sales AS (
         SELECT *
         FROM honeybook_transactions
         UNION ALL
@@ -42,6 +39,19 @@ WITH
         UNION ALL
         SELECT *
         FROM square_transactions
+    ),
+    final AS (
+        SELECT
+            event_id,
+            event_name,
+            event_date,
+            DATE_TRUNC(event_date, WEEK) AS event_week,
+            DATE_TRUNC(event_date, MONTH) AS event_month, 
+            event_type,
+            event_category,
+            SUM(sales) AS total_sales
+        FROM combined_sales
+        GROUP BY 1, 2, 3, 4, 5, 6, 7
     )
 
 SELECT *
