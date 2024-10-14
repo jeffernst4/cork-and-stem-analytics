@@ -20,8 +20,7 @@ WITH
             event_name,
             event_type,
             event_category,
-            event_start_timestamp,
-            event_end_timestamp
+            event_date
         FROM {{ ref('src_event_log') }}
     ),
     final AS (
@@ -32,7 +31,7 @@ WITH
             event_log.event_category
         FROM honeybook_transactions
             LEFT JOIN event_log
-                ON honeybook_transactions.project_date = DATE(event_log.event_start_timestamp)
+                ON honeybook_transactions.project_date = event_log.event_date
                 AND honeybook_transactions.project_name = event_log.event_name
     )
 

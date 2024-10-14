@@ -3,6 +3,7 @@ SELECT
     event_name,
     event_type,
     event_category,
+    date AS event_date,
     TIMESTAMP(CONCAT(date, ' ', start_time)) AS event_start_timestamp,
     TIMESTAMP(CONCAT(date, ' ', end_time)) AS event_end_timestamp  
 FROM {{ source('events', 'event_log') }}
