@@ -1,39 +1,48 @@
 WITH
     honeybook_transactions AS (
         SELECT
+            NULL AS event_id,
             project_name AS event_name,
             project_date AS event_date,
             event_type,
             event_category,
-            SUM(net_sales) AS total_sales
+            SUM(net_sales) AS sales
         FROM {{ ref('stg_honeybook_transactions') }}
-        GROUP BY 1, 2, 3, 4
+        GROUP BY 1, 2, 3, 4, 5
     ),
-    shopify_transactions AS (
+    shopify_eventS AS (
         SELECT
-            product_name,
-            DATE(order_timestamp) AS order_date,
-            total_sales
-        FROM {{ ref('stg_shopify_transactions') }}
-        WHERE transaction_category = 'Event'
+            event_id,
+            event_name,
+            COALESCE(event_date, SAFE_CAST(order_timestamp AS DATE)) AS event_date,
+            event_type,
+            event_category,
+            SUM(total_event_sales) AS sales
+        FROM {{ ref('shopify_events') }}
+        GROUP BY 1, 2, 3, 4, 5
     ),
     square_transactions AS (
-        SELECT *
+        SELECT
+            event_id,
+            event_name,
+            SAFE_CAST(transaction_timestamp AS DATE) AS event_date,
+            event_type,
+            event_category,
+            SUM(net_sales) AS sales
         FROM {{ ref('stg_square_transactions') }}
         WHERE transaction_category = 'Onsite Event'
+        GROUP BY 1, 2, 3, 4, 5
+    ),
+    final AS (
+        SELECT *
+        FROM honeybook_transactions
+        UNION ALL
+        SELECT *
+        FROM shopify_events
+        UNION ALL
+        SELECT *
+        FROM square_transactions
     )
-    -- final AS (
-    --     SELECT
-    --         project_name AS event_name,
-    --         project_date AS event_date,
-    --         COALESCE(event_log.event_type, 'Unknown') AS event_type,
-    --         COALESCE(event_log.event_category, 'Unknown') AS event_category,
-    --         honeybook_events.total_sales
-    --     FROM honeybook_events
-    --     LEFT JOIN event_log
-    --     ON honeybook_events.project_date = DATE(event_log.event_start_timestamp)
-    --     AND honeybook_events.project_name = event_log.event_name
-    -- )
 
 SELECT *
-FROM honeybook_transactions
+FROM final

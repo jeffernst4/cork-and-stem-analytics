@@ -31,9 +31,9 @@ WITH
             event_log.event_type,
             event_log.event_category
         FROM honeybook_transactions
-        LEFT JOIN event_log
-        ON honeybook_transactions.project_date = DATE(event_log.event_start_timestamp)
-        AND honeybook_transactions.project_name = event_log.event_name
+            LEFT JOIN event_log
+                ON honeybook_transactions.project_date = DATE(event_log.event_start_timestamp)
+                AND honeybook_transactions.project_name = event_log.event_name
     )
 
 SELECT *
