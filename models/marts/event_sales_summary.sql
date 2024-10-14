@@ -47,8 +47,8 @@ WITH
             event_date,
             DATE_TRUNC(event_date, WEEK) AS event_week,
             DATE_TRUNC(event_date, MONTH) AS event_month, 
-            event_type,
-            event_category,
+            COALESCE(event_type, 'Uncategorized') AS event_type,
+            COALESCE(event_category, 'Uncategorized') AS event_category,
             SUM(sales) AS total_sales
         FROM combined_sales
         GROUP BY 1, 2, 3, 4, 5, 6, 7
