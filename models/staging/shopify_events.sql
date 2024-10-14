@@ -22,7 +22,7 @@ WITH
             event_name,
             event_type,
             event_category,
-            DATE(event_start_timestamp) AS event_date,
+            event_date,
             event_start_timestamp
         FROM {{ ref('src_event_log') }}
     ),
