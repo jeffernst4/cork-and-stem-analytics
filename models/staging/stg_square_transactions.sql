@@ -7,6 +7,7 @@ WITH
         SELECT
             event_id,
             event_name,
+            DATE(event_start_timestamp) AS event_date,
             event_type,
             event_category,
             event_start_timestamp,
