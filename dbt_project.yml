@@ -40,6 +40,8 @@ models:
     # Applies to all files under models/example/
     src:
       +materialized: table
+    prod:
+      +materialized: table
 
 
 
