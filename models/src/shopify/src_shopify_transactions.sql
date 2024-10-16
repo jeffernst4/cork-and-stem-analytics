@@ -1,31 +1,12 @@
 WITH
     raw_data AS (
         SELECT
-            `Order ID` AS order_id,
-            `Sale ID` AS sale_id,
-            {{ convert_to_pt('Date') }} AS order_timestamp,
-            `Order` AS order_number,
-            `Transaction type` AS transaction_type,
-            `Sale type` AS sale_type,
-            `Sales channel` AS sales_channel,
-            `Billing country` AS billing_country,
-            `Billing region` AS billing_region,
-            `Billing city` AS billing_city,
-            `Shipping country` AS shipping_country,
-            `Shipping region` AS shipping_region,
-            `Shipping city` AS shipping_city,
-            `Product type` AS product_type,
-            `Product vendor` AS product_vendor,
-            `Product` AS product_name,
-            `Variant` AS product_variant,
-            `Net quantity` AS net_quantity,
-            `Gross sales` AS gross_sales,
-            `Discounts` AS discounts,
-            `Returns` AS returns,
-            `Net sales` AS net_sales,
-            `Shipping` AS shipping_fees,
-            `Taxes` AS taxes,
-            `Total sales` AS total_sales
+            order_id,
+            sale_id,
+            date,
+            product_type,
+            product_title AS product_name,
+            total_sales
         FROM {{ source('shopify', 'shopify_transactions') }}
     )
 

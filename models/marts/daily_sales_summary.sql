@@ -9,7 +9,7 @@ WITH
     shopify_transactions AS (
         SELECT
             CONCAT('Shopify - ', transaction_category) AS type,
-            DATE(order_timestamp) AS date,
+            date,
             total_sales AS sales
         FROM {{ ref('stg_shopify_transactions') }}
     ),
@@ -20,12 +20,12 @@ WITH
             subtotal AS sales
         FROM {{ ref('src_doordash_transactions') }}
     ),
-    honeybook_transactions AS (
+    honeybook_projects AS (
         SELECT
             'Honeybook' AS type,
-            project_date AS date,
+            event_date AS date,
             net_sales AS sales
-        FROM {{ ref('stg_honeybook_transactions') }}
+        FROM {{ ref('stg_honeybook_projects') }}
     ),
     combined_sales AS (
         SELECT *
@@ -38,7 +38,7 @@ WITH
         FROM doordash_transactions
         UNION ALL
         SELECT *
-        FROM honeybook_transactions
+        FROM honeybook_projects
     ),
     final AS (
         SELECT
