@@ -33,5 +33,5 @@ WITH
                 ON square_transactions.transaction_timestamp BETWEEN onsite_events.event_start_timestamp AND onsite_events.event_end_timestamp
     )
 
-SELECT distinct transaction_category
+SELECT *
 FROM final
