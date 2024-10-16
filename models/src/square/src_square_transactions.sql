@@ -1,39 +1,43 @@
 WITH
     raw_data AS (
+        SELECT *
+        FROM {{ source('square', 'square_transactions') }}
+    ),
+    main AS (
         SELECT
-            `Date` AS date,
-            `Time` AS time,
+            date,
+            time,
             CASE 
-                WHEN `Time Zone` = 'Pacific Time (US & Canada)' THEN 'America/Los_Angeles'
+                WHEN time_zone = 'Pacific Time (US & Canada)' THEN 'America/Los_Angeles'
                 -- Add other mappings as needed
                 ELSE 'America/Los_Angeles'
             END AS timezone,
-            `Category` AS item_category,
-            `Item` AS item,
-            `Qty` AS quantity,
-            `Price Point Name` AS price_point_name,
-            `SKU` AS sku,
-            `Modifiers Applied` AS modifiers_applied,
-            `Gross Sales` AS gross_sales,
-            `Discounts` AS discounts,
-            `Net Sales` AS net_sales,
-            `Tax` AS tax,
-            `Transaction ID` AS transaction_id,
-            `Payment ID` AS payment_id,
-            `Device Name` AS device_name,
-            `Notes` AS notes,
-            `Details` AS details,
-            `Event Type` AS transaction_type,
-            `Location` AS location,
-            `Dining Option` AS dining_option,
-            `Customer ID` AS customer_id,
-            `Customer Name` AS customer_name,
-            `Customer Reference ID` AS customer_reference_id,
-            `Unit` AS unit,
-            `Count` AS count,
-            `Itemization Type` AS itemization_type,
-            `Fulfillment Note` AS fulfillment_note,
-            `Token` AS token
+            category AS item_category,
+            item,
+            qty AS quantity,
+            price_point_name,
+            sku,
+            modifiers_applied,
+            gross_sales,
+            discounts,
+            net_sales,
+            tax,
+            transaction_id,
+            payment_id,
+            device_name,
+            notes,
+            details,
+            event_type AS transaction_type,
+            location,
+            dining_option,
+            customer_id,
+            customer_name,
+            customer_reference_id,
+            unit,
+            count,
+            itemization_type,
+            fulfillment_note,
+            token
         FROM {{ source('square', 'square_transactions') }}
     ),
     final AS (
@@ -65,7 +69,7 @@ WITH
             itemization_type,
             fulfillment_note,
             token
-        FROM raw_data
+        FROM main
     )
 
 SELECT *
