@@ -1,19 +1,19 @@
 WITH
-    honeybook_transactions AS (
+    honeybook_projects AS (
         SELECT
-            NULL AS event_id,
+            CAST(NULL AS STRING) AS event_id,
             project_name AS event_name,
-            project_date AS event_date,
+            event_date,
             event_type,
             event_category,
             net_sales AS sales
-        FROM {{ ref('stg_honeybook_transactions') }}
+        FROM {{ ref('stg_honeybook_projects') }}
     ),
-    shopify_eventS AS (
+    shopify_events AS (
         SELECT
             event_id,
             event_name,
-            COALESCE(event_date, SAFE_CAST(order_timestamp AS DATE)) AS event_date,
+            COALESCE(event_date, order_date) AS event_date,
             event_type,
             event_category,
             total_event_sales AS sales
@@ -32,7 +32,7 @@ WITH
     ),
     combined_sales AS (
         SELECT *
-        FROM honeybook_transactions
+        FROM honeybook_projects
         UNION ALL
         SELECT *
         FROM shopify_events

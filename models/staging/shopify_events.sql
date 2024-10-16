@@ -3,7 +3,7 @@ WITH
         SELECT
             order_id,
             sale_id,
-            order_timestamp,
+            date,
             product_name,
             transaction_category,
             total_sales
@@ -29,7 +29,7 @@ WITH
     shopify_event_orders AS (
         SELECT
             order_id,
-            order_timestamp,
+            date AS order_date,
             SUM(total_sales) AS total_sales
         FROM shopify_transactions
         WHERE transaction_category = 'Event'
@@ -48,7 +48,7 @@ WITH
     final AS (
         SELECT
             shopify_event_orders.order_id,
-            shopify_event_orders.order_timestamp,
+            shopify_event_orders.order_date,
             evey_orders.event_id,
             event_log.event_name,
             event_log.event_date,
