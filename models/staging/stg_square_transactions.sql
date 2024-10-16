@@ -20,7 +20,7 @@ WITH
             square_transactions.*,
             CASE
                 WHEN item like '%Submatic%' OR item_category = 'Membership' THEN 'Membership'
-                WHEN onsite_events.event_name IS NOT NULL THEN 'Onsite Event'
+                WHEN onsite_events.event_name IS NOT NULL OR item_category = 'Private Event' THEN 'Onsite Event'
                 ELSE 'General'
             END AS transaction_category,
             onsite_events.event_id,
