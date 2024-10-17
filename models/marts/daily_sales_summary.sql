@@ -16,7 +16,7 @@ WITH
     doordash_transactions AS (
         SELECT
             'DoorDash' AS type,
-            DATE(order_placed_timestamp) AS date,
+            DATE(pickup_timestamp) AS date,
             subtotal AS sales
         FROM {{ ref('src_doordash_transactions') }}
     ),
