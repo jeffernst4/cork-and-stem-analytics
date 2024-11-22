@@ -8,6 +8,7 @@ WITH
             event_date,
             total_project_value - refunded_amount AS net_sales
         FROM {{ ref('src_honeybook_projects') }}
+        WHERE is_booked OR total_project_value > 0
     ),
     event_log AS (
         SELECT
