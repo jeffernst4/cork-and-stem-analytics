@@ -45,7 +45,7 @@ WITH
             event_id,
             event_name,
             event_date,
-            DATE_TRUNC(event_date, WEEK) AS event_week,
+            DATE_TRUNC(event_date - 1, WEEK) + 1 AS event_week,
             DATE_TRUNC(event_date, MONTH) AS event_month, 
             COALESCE(event_type, 'Uncategorized') AS event_type,
             COALESCE(event_category, 'Uncategorized') AS event_category,

@@ -51,7 +51,7 @@ WITH
             END AS transaction_category,
             type AS transaction_type,
             date AS transaction_date,
-            DATE_TRUNC(date, WEEK) AS transaction_week,
+            DATE_TRUNC(date - 1, WEEK) + 1 AS transaction_week,
             DATE_TRUNC(date, MONTH) AS transaction_month, 
             SUM(sales) AS total_sales
         FROM combined_sales
