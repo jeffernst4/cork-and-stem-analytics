@@ -1,4 +1,5 @@
 WITH
+
     square_transactions AS (
         SELECT
             CONCAT('Square - ', transaction_category) AS type,
@@ -6,6 +7,7 @@ WITH
             net_sales AS sales
         FROM {{ ref('stg_square_transactions') }}
     ),
+
     shopify_transactions AS (
         SELECT
             CONCAT('Shopify - ', transaction_category) AS type,
@@ -13,13 +15,16 @@ WITH
             total_sales AS sales
         FROM {{ ref('stg_shopify_transactions') }}
     ),
+
     doordash_transactions AS (
         SELECT
             'DoorDash' AS type,
-            DATE(pickup_timestamp) AS date,
+            DATE(order_timestamp) AS date,
             subtotal AS sales
         FROM {{ ref('src_doordash_transactions') }}
+        WHERE final_order_status = 'DELIVERED'
     ),
+
     honeybook_projects AS (
         SELECT
             'Honeybook' AS type,
@@ -27,6 +32,7 @@ WITH
             net_sales AS sales
         FROM {{ ref('stg_honeybook_projects') }}
     ),
+
     combined_sales AS (
         SELECT *
         FROM square_transactions
@@ -40,6 +46,7 @@ WITH
         SELECT *
         FROM honeybook_projects
     ),
+    
     final AS (
         SELECT
             CASE

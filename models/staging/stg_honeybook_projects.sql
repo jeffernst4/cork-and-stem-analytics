@@ -1,4 +1,5 @@
 WITH
+
     honeybook_projects AS (
         SELECT
             company_name,
@@ -11,19 +12,23 @@ WITH
         WHERE is_booked = 'Yes'
             OR (total_project_value - refunded_amount) > 0
     ),
+
     event_log AS (
         SELECT
             event_id,
             event_name,
+            event_location,
             event_type,
             event_category,
             event_date
         FROM {{ ref('src_event_log') }}
     ),
+
     final AS (
         SELECT
             honeybook_projects.*,
             event_log.event_id,
+            event_location,
             event_log.event_type,
             event_log.event_category
         FROM honeybook_projects

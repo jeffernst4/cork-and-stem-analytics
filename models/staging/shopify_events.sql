@@ -1,4 +1,5 @@
 WITH
+
     shopify_transactions AS (
         SELECT
             order_id,
@@ -9,6 +10,7 @@ WITH
             total_sales
         FROM {{ ref('stg_shopify_transactions') }}
     ),
+
     evey_attendees AS (
         SELECT
             attendee_id,
@@ -16,16 +18,19 @@ WITH
             order_id
         FROM {{ ref('src_evey_attendees') }}
     ),
+
     event_log AS (
         SELECT
             event_id,
             event_name,
+            event_location,
             event_type,
             event_category,
             event_date,
             event_start_timestamp
         FROM {{ ref('src_event_log') }}
     ),
+
     shopify_event_orders AS (
         SELECT
             order_id,
@@ -35,6 +40,7 @@ WITH
         WHERE transaction_category = 'Event'
         GROUP BY 1, 2
     ),
+
     evey_orders AS (
         SELECT
             order_id,
@@ -45,6 +51,7 @@ WITH
         FROM evey_attendees
         GROUP BY 1, 2
     ),
+
     final AS (
         SELECT
             shopify_event_orders.order_id,
@@ -52,6 +59,7 @@ WITH
             evey_orders.event_id,
             event_log.event_name,
             event_log.event_date,
+            event_log.event_location,
             event_log.event_type,
             event_log.event_category,
             evey_orders.attendee_count,
