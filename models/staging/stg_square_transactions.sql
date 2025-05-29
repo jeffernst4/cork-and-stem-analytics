@@ -1,20 +1,24 @@
 WITH
+
     square_transactions AS (
         SELECT *
         FROM {{ ref('src_square_transactions') }}
     ),
+
     onsite_events AS (
         SELECT
             event_id,
             event_name,
             DATE(event_start_timestamp) AS event_date,
+            event_location,
             event_type,
             event_category,
             event_start_timestamp,
             event_end_timestamp
         FROM {{ ref('src_event_log') }}
-        WHERE event_type = 'Onsite Event'
+        WHERE event_location = 'Onsite Event'
     ),
+
     final AS (
         SELECT
             square_transactions.*,
@@ -26,6 +30,7 @@ WITH
             onsite_events.event_id,
             onsite_events.event_name,
             onsite_events.event_date,
+            onsite_events.event_location,
             onsite_events.event_type,
             onsite_events.event_category
         FROM square_transactions
