@@ -60,7 +60,7 @@ WITH
             COALESCE(event_category, 'Uncategorized') AS event_category,
             SUM(sales) AS total_sales
         FROM combined_sales
-        GROUP BY 1, 2, 3, 4, 5, 6, 7
+        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8
     )
 
 SELECT *
