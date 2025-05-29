@@ -55,7 +55,7 @@ WITH
             event_date,
             DATE_TRUNC(event_date - 1, WEEK) + 1 AS event_week,
             DATE_TRUNC(event_date, MONTH) AS event_month,
-            COALESCE(event_location, 'Uncategorized') AS event_type,
+            COALESCE(event_location, 'Uncategorized') AS event_location,
             COALESCE(event_type, 'Uncategorized') AS event_type,
             COALESCE(event_category, 'Uncategorized') AS event_category,
             SUM(sales) AS total_sales
