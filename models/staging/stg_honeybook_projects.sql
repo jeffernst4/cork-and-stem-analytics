@@ -4,6 +4,7 @@ WITH
         SELECT
             company_name,
             project_name,
+            project_type,
             project_creation_date,
             booked_date,
             event_date,

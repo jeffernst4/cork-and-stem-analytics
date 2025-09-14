@@ -27,7 +27,7 @@ WITH
 
     honeybook_projects AS (
         SELECT
-            'Honeybook' AS type,
+            CONCAT('Honeybook - ', project_type) AS type,
             event_date AS date,
             net_sales AS sales
         FROM {{ ref('stg_honeybook_projects') }}
@@ -50,7 +50,8 @@ WITH
     final AS (
         SELECT
             CASE
-                WHEN type IN ('Square - Onsite Event', 'Shopify - Event', 'Honeybook') THEN 'Event'
+                WHEN type LIKE 'Honeybook%' THEN 'Event'
+                WHEN type IN ('Square - Onsite Event', 'Shopify - Event') THEN 'Event'
                 WHEN type = 'Square - Membership' THEN 'Membership'
                 WHEN type = 'Square - General' THEN  'In-Store'
                 WHEN type LIKE 'Shopify%' THEN 'Online'
