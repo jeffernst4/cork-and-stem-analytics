@@ -63,6 +63,7 @@ WITH
             DATE_TRUNC(date, MONTH) AS transaction_month, 
             SUM(sales) AS total_sales
         FROM combined_sales
+        WHERE date <= CURRENT_DATE("America/Los_Angeles")
         GROUP BY type, date
     )
     
