@@ -7,7 +7,6 @@ WITH
 
     final AS (
         SELECT
-            business_id,
             doordash_order_id,
             doordash_transaction_id,
             transaction_type,
