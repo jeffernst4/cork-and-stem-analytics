@@ -14,7 +14,7 @@ WITH
             store_id,
             business_id,
             TIMESTAMP(SAFE.PARSE_TIMESTAMP('%Y-%m-%d %H:%M:%E*S', timestamp_local_time)) AS order_timestamp,
-            subtotal,
+            SAFE_CAST(NULLIF(subtotal, 'NULL') AS FLOAT64) AS subtotal
         FROM {{ source('doordash', 'doordash_transactions') }}
     )
 

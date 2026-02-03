@@ -22,7 +22,6 @@ WITH
             DATE(order_timestamp) AS date,
             subtotal AS sales
         FROM {{ ref('src_doordash_transactions') }}
-        WHERE final_order_status = 'Delivered'
     ),
 
     honeybook_projects AS (
