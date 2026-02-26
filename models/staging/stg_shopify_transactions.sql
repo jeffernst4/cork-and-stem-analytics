@@ -1,8 +1,10 @@
 WITH
+
     shopify_transactions AS (
         SELECT *
         FROM {{ ref('src_shopify_transactions') }}
     ),
+
     final AS (
         SELECT
             shopify_transactions.*,

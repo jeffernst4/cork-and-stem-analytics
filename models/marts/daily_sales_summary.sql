@@ -8,12 +8,21 @@ WITH
         FROM {{ ref('stg_square_transactions') }}
     ),
 
-    shopify_transactions AS (
+    non_event_shopify_transactions AS (
         SELECT
             CONCAT('Shopify - ', transaction_category) AS type,
             date,
             total_sales AS sales
         FROM {{ ref('stg_shopify_transactions') }}
+        WHERE transaction_category <> 'Event'
+    ),
+
+    event_shopify_transactions AS (
+        SELECT
+            CONCAT('Shopify - Event') AS type,
+            event_date AS date,
+            total_event_sales AS sales
+        FROM {{ ref('shopify_events') }}
     ),
 
     doordash_transactions AS (
@@ -37,7 +46,10 @@ WITH
         FROM square_transactions
         UNION ALL
         SELECT *
-        FROM shopify_transactions
+        FROM non_event_shopify_transactions
+        UNION ALL
+        SELECT *
+        FROM event_shopify_transactions
         UNION ALL
         SELECT *
         FROM doordash_transactions
