@@ -3,3 +3,8 @@
 target/
 dbt_packages/
 logs/
+dbt_internal_packages/
+
+# OS / editor files
+.DS_Store
+.vscode/
