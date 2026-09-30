@@ -3,7 +3,7 @@ import pandas as pd
 
 input_file, output_file = sys.argv[1], sys.argv[2]
 
-df = pd.read_csv(input_file)
+df = pd.read_csv(input_file, dtype=str)
 df.columns = (
     df.columns.str.lower()
     .str.replace(".", "", regex=False)
