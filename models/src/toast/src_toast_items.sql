@@ -9,7 +9,7 @@ WITH
             parentid AS parent_id,
             itemguid AS item_guid,
             item,
-            sales_category,
+            COALESCE(sales_category, 'No Category') AS sales_category,
             item_tags,
             deferred,
             qty_sold,
@@ -31,6 +31,8 @@ WITH
             item_qty_incl_voids,
             gross_item_amt_incl_voids
         FROM raw_data
+        -- exclude the export's summary/total row
+        WHERE item IS NOT NULL
     )
 
 SELECT *
