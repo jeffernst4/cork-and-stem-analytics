@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: toast
+    database: cork-and-stem-analytics
+    schema: raw_data_sources
+    tables:
+      - name: toast_items
+        description: Item sales data from Toast
