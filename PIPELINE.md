@@ -65,12 +65,16 @@ dbt Cloud can't run the Python ingestion scripts, so GitHub Actions is the singl
 
 Steps run in order, and a failed step stops everything after it, so dashboards never show partial data. GitHub emails you when a run fails.
 
-# Order of work: 
-- [ ] set up basic Tableau visualizations with daily transactions 
-- [ ] data ingestion workflow (need to have API access to sources, possibly)
-- [ ] work on building and testing the pipeline
-   - ingestion scripts 
+# TODOs: 
+- [x] set up basic Tableau visualizations with daily transactions that already exist (daily_sales_summary)
+- [ ] work on building and testing the pipeline (just with Toast, for now)
+   - data ingestion scripts 
    - workflow scripts (GHA)
+   - automatic set up with Tableau
    - testing 
    - done criteria: automatic data ingestion, dbt transformations, and updates in Tableau
-- [ ] expland from simple transaction trends to user/customer insights
+- [ ] expland from simple transaction trends to user/customer insights (Toast for now)
+   - explore what other data exists and how it can be used
+- [ ] expland to other sources
+   - clean up final sources 
+   - figure out access (APIs?)
