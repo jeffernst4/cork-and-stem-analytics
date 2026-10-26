@@ -8,3 +8,12 @@ dbt_internal_packages/
 # OS / editor files
 .DS_Store
 .vscode/
+
+# secrets
+.env
+# local Toast API samples (may contain PII)
+toast_samples/
+
+
+# Python
+__pycache__/
