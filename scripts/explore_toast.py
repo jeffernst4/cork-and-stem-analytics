@@ -10,7 +10,7 @@ and saves the full response to toast_samples/<name>.json for closer inspection.
 import json
 import os
 import sys
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 import requests
@@ -42,7 +42,13 @@ def main():
     client = ToastClient()
 
     guid = os.environ["TOAST_RESTAURANT_GUID"]
+    day = datetime.strptime(business_date, "%Y%m%d")
+    shift_window = {
+        "startDate": day.strftime("%Y-%m-%dT00:00:00.000-0000"),
+        "endDate": (day + timedelta(days=1)).strftime("%Y-%m-%dT00:00:00.000-0000"),
+    }
     endpoints = {
+        "restaurant": (f"/restaurants/v1/restaurants/{guid}", None), # timezone and hours, for converting UTC timestamps to local time
         "menus": ("/menus/v2/menus", None), # item GUIDs in orders into names and groups
         "orders": ("/orders/v2/ordersBulk", {"businessDate": business_date, "pageSize": 5}), # core orders dataset, edit pageSize later
         "revenue_centers": ("/config/v2/revenueCenters", None), # sales by area (bar, patio, events, etc)
@@ -51,7 +57,8 @@ def main():
         "discounts": ("/config/v2/discounts", None), # discount names, amounts, percentages 
         "employees": ("/labor/v1/employees", None), # SENSITIVE: contains personal information, only matters for GUIDs and job link
         "jobs": ("/labor/v1/jobs", None), # information on roles, lookup for time entries
-        "time_entries": ("/labor/v1/timeEntries", {"businessDate": business_date}), # employee clock ins for the day 
+        "time_entries": ("/labor/v1/timeEntries", {"businessDate": business_date}), # employee clock ins for the day
+        "shifts": ("/labor/v1/shifts", shift_window), # scheduled shifts, compare with time entries and sales for staffing vs demand
     }
 
     OUT_DIR.mkdir(exist_ok=True)
