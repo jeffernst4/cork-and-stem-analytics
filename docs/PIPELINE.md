@@ -27,8 +27,8 @@ ingest → dbt build → refresh dashboards
 From Toast endpoints (`scripts/explore_toast.py`).
 
 **First Priorities:**
-- Orders by revenue center (the categories, basically)
-  - Raw tables: `orders`, `revenue_centers`
+- Sales by sales category (Wine, Food, Flowers, Events ...), from line items
+  - Raw tables: `orders`, `sales_categories`
 - Members vs non members check size and share, orders by categories 
   - Raw tables: `orders`, `discounts`, `sales_categories`
 - Heatmap of busiest times and days based on orders
@@ -116,11 +116,11 @@ The same pipeline supports this. It needs new tables and dbt models, not a new a
    - brainstorm and plan: 
       + how do the tables tie together -> diagramed in `docs/toast_data_model.md`
       + narrow down to three top insights to do at first 
-        -> do first: orders by revenue centers, heatmap of popular times/days, member vs non member check volumes (maybe what they order too)
-      - plan out what tables and scripts are needed and how they will be used, what final visuals will they yield 
+        -> do first: orders by categories, heatmap of popular times/days, member vs non member check volumes (maybe what they order too?)
+      + plan out what tables and scripts are needed and how they will be used, what final visuals will they yield 
    - data ingestion scripts and basic cleaning: 
       - incremental updates to big query -> ingestion
-      - basic cleaning done in python scripts
+      - basic cleaning done in python scripts (after ingestion)
    - dbt models for transformations to prepare for Tableau 
    - set up table with Tableau
    - workflow script(s) through GHA -> a cron job of the entire pipeline
