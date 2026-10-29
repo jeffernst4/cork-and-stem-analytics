@@ -24,8 +24,17 @@ ingest → dbt build → refresh dashboards
 
 ## 0. Brainstorm (future insights, no customer PII)
 
-From Toast endpoints (`scripts/explore_toast.py`). Order fields still to be confirmed on an open day.
+From Toast endpoints (`scripts/explore_toast.py`).
 
+**First Priorities:**
+- Orders by revenue center (the categories, basically)
+  - Raw tables: `orders`, `revenue_centers`
+- Members vs non members check size and share, orders by categories 
+  - Raw tables: `orders`, `discounts`, `sales_categories`
+- Heatmap of busiest times and days based on orders
+  - Raw tables: `orders`
+
+Other ideas (not well formulated):
 - **Order dynamics:**
   - Busy times: orders and sales by hour × weekday
   - Party size (`numberOfGuests`), spend per guest, visit length (opened → closed)
@@ -106,14 +115,14 @@ The same pipeline supports this. It needs new tables and dbt models, not a new a
       + basic toast client script and understanding of it 
    - brainstorm and plan: 
       + how do the tables tie together -> diagramed in `docs/toast_data_model.md`
-      - narrow down to three top insights to do at first 
-      - have a brainstormed list of other ideas
-      - plan out what tables are needed and how they will be used, what final visuals will they yield 
+      + narrow down to three top insights to do at first 
+        -> do first: orders by revenue centers, heatmap of popular times/days, member vs non member check volumes (maybe what they order too)
+      - plan out what tables and scripts are needed and how they will be used, what final visuals will they yield 
    - data ingestion scripts and basic cleaning: 
       - incremental updates to big query -> ingestion
       - basic cleaning done in python scripts
    - dbt models for transformations to prepare for Tableau 
-   - automatic set up with Tableau
+   - set up table with Tableau
    - workflow script(s) through GHA -> a cron job of the entire pipeline
    - testing 
    - done criteria: automatic data ingestion, dbt transformations, and updates in Tableau (3 most important for now)
