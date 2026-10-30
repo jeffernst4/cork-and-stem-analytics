@@ -113,19 +113,21 @@ The same pipeline supports this. It needs new tables and dbt models, not a new a
       + correct connection to Toast through the API 
       + what data is available with Toast
       + basic toast client script and understanding of it 
-   - brainstorm and plan: 
+   + brainstorm and plan: 
       + how do the tables tie together -> diagramed in `docs/toast_data_model.md`
       + narrow down to three top insights to do at first 
         -> do first: orders by categories, heatmap of popular times/days, member vs non member check volumes (maybe what they order too?)
       + plan out what tables and scripts are needed and how they will be used, what final visuals will they yield 
    - data ingestion scripts and basic cleaning: 
-      - incremental updates to big query -> ingestion
+      + incremental updates to big query -> ingestion script `scripts/ingest_toast.py`
       - basic cleaning done in python scripts (after ingestion)
    - dbt models for transformations to prepare for Tableau 
    - set up table with Tableau
    - workflow script(s) through GHA -> a cron job of the entire pipeline
    - testing 
    - done criteria: automatic data ingestion, dbt transformations, and updates in Tableau (3 most important for now)
+- [ ] simplify the tables and tables diagram
+    - i don't think i need all of them since sometimes they are nested inside other tables (ex: orders and checks)
 - [ ] expand to other Toast insights
 - [ ] expland to other sources
    - clean up final sources (still get confused on which to leave/delete)
