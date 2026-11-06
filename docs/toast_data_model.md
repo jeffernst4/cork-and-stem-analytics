@@ -6,26 +6,26 @@ Built from `toast_samples/*.json` (sample of 5 orders).
 
 ```mermaid
 erDiagram
-    ORDERS ||--|{ CHECKS : "checks[]"
-    CHECKS ||--|{ SELECTIONS : "selections[]"
-    SELECTIONS ||--o{ SELECTIONS : "modifiers[]"
-    CHECKS ||--o{ PAYMENTS : "payments[]"
-    CHECKS ||--o{ APPLIED_DISCOUNTS : "appliedDiscounts[]"
-    SELECTIONS ||--o{ APPLIED_DISCOUNTS : "appliedDiscounts[]"
+    ORDERS ||..|{ orders_checks : "checks[]"
+    orders_checks ||..|{ orders_selections : "selections[]"
+    orders_selections ||..o{ orders_selections : "modifiers[]"
+    orders_checks ||..o{ orders_payments : "payments[]"
+    orders_checks ||..o{ orders_applied_discounts : "appliedDiscounts[]"
+    orders_selections ||..o{ orders_applied_discounts : "appliedDiscounts[]"
 
     REVENUE_CENTERS ||--o{ ORDERS : revenueCenter
     DINING_OPTIONS ||--o{ ORDERS : diningOption
     EMPLOYEES ||--o{ ORDERS : server
-    EMPLOYEES ||--o{ PAYMENTS : server
-    MENU_ITEMS ||--o{ SELECTIONS : item
-    MENU_GROUPS ||--o{ SELECTIONS : itemGroup
-    SALES_CATEGORIES ||--o{ SELECTIONS : salesCategory
-    SALES_CATEGORIES ||--o{ MENU_ITEMS : salesCategory
-    DISCOUNTS ||--o{ APPLIED_DISCOUNTS : discount
+    EMPLOYEES ||--o{ orders_payments : server
+    menus_menu_items ||--o{ orders_selections : item
+    menus_menu_groups ||--o{ orders_selections : itemGroup
+    SALES_CATEGORIES ||--o{ orders_selections : salesCategory
+    SALES_CATEGORIES ||--o{ menus_menu_items : salesCategory
+    DISCOUNTS ||--o{ orders_applied_discounts : discount
 
-    MENUS ||--|{ MENU_GROUPS : "menuGroups[]"
-    MENU_GROUPS ||--o{ MENU_GROUPS : "menuGroups[] (e.g. Wine > Reds)"
-    MENU_GROUPS ||--o{ MENU_ITEMS : "menuItems[]"
+    MENUS ||..|{ menus_menu_groups : "menuGroups[]"
+    menus_menu_groups ||..o{ menus_menu_groups : "menuGroups[] (e.g. Wine > Reds)"
+    menus_menu_groups ||..o{ menus_menu_items : "menuItems[]"
 
     EMPLOYEES }o--o{ JOBS : jobReferences
     EMPLOYEES ||--o{ TIME_ENTRIES : employeeReference
@@ -48,7 +48,7 @@ erDiagram
         string table_guid
         bool voided
     }
-    CHECKS {
+    orders_checks {
         string guid PK
         float amount
         float totalAmount
@@ -57,7 +57,7 @@ erDiagram
         json customer "PII, 1 of 5 checks"
         json appliedLoyaltyInfo "1 of 5 checks"
     }
-    SELECTIONS {
+    orders_selections {
         string guid PK
         string displayName
         int quantity
@@ -68,7 +68,7 @@ erDiagram
         string salesCategory_guid FK
         bool voided
     }
-    PAYMENTS {
+    orders_payments {
         string guid PK
         string orderGuid
         string checkGuid
@@ -77,7 +77,7 @@ erDiagram
         float tipAmount
         string server_guid FK
     }
-    APPLIED_DISCOUNTS {
+    orders_applied_discounts {
         string guid PK
         string name "e.g. Member Discount 20%"
         float discountAmount
@@ -107,11 +107,11 @@ erDiagram
         string guid PK
         string name "Food, Drinks, Retail, Events, ..."
     }
-    MENU_GROUPS {
+    menus_menu_groups {
         string guid PK
         string name
     }
-    MENU_ITEMS {
+    menus_menu_items {
         string guid PK
         string name
         float price
@@ -155,11 +155,14 @@ Each end of a line shows how many rows can sit on that side.
 | `o{` | zero or more |
 
 Examples:
-- `ORDERS ||--|{ CHECKS`: one order has one or more checks; each check belongs to exactly one order.
+- `ORDERS ||..|{ orders_checks`: one order has one or more checks; each check belongs to exactly one order.
 - `REVENUE_CENTERS ||--o{ ORDERS`: one revenue center has zero or more orders; each order points to one revenue center.
 - `EMPLOYEES }o--o{ JOBS`: many-to-many; an employee can hold several jobs, and a job can belong to several employees.
 
-The label on a line is the JSON field that links the tables. Labels ending in `[]` are arrays nested inside the parent JSON. Other labels are GUID references to a lookup table.
+The label on a line is the JSON field that links the tables.
+- **UPPERCASE** entities are raw tables in BigQuery. **lowercase** entities (`orders_checks`, `menus_menu_items`, ...) are nested inside the raw table named before the first `_`, not separate tables; dbt staging flattens them.
+- **Dashed lines** (`..`, labels ending in `[]`): an array nested inside the parent JSON.
+- **Solid lines** (`--`): a GUID reference to a lookup table.
 
 ## Notes from the sample
 - Orders → checks → selections → modifiers are nested arrays inside one order JSON; dbt will flatten each level into its own staging model.
